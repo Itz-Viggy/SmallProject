@@ -4,7 +4,7 @@
 	$login = $inData["login"];
 	$password = $inData["password"];
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+	$conn = new mysqli("localhost", "smallProject", "COP4331@9group", "Project1DB");
 	if ($conn->connect_error) 
 	{
 		returnWithError( $conn->connect_error );
