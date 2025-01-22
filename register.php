@@ -8,6 +8,8 @@ $inData = getRequestInfo();
 
 $login = $inData["login"];
 $password = $inData["password"];
+$firstName = $inData["firstName"];
+$lastName = $inData["lastName"];
 
 // Database connection
 $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "Project1DB");
@@ -17,12 +19,12 @@ if ($conn->connect_error)
 } 
 else
 {
-    // Prepare and execute the SQL statement
-    $stmt = $conn->prepare("INSERT INTO Users (Login, Password) VALUES(?, ?)");
+    // Prepare and execute the SQL statement with first name and last name
+    $stmt = $conn->prepare("INSERT INTO Users (FirstName,LastName, Login, Password  ) VALUES(?, ?, ?, ?)");
     if (!$stmt) {
         returnWithError($conn->error);
     } else {
-        $stmt->bind_param("ss", $login, $password);
+        $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
         if (!$stmt->execute()) {
             returnWithError($stmt->error);
         } else {
