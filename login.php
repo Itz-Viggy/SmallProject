@@ -7,6 +7,7 @@
 	$firstName = "";
 	$lastName = "";
 
+	# ask him if the username and password are for the API or mySQL
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "Project1DB");	
 	if( $conn->connect_error )
 	{
