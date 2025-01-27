@@ -1,9 +1,4 @@
 <?php
-
-	// Enable detailed error reporting for debugging
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
 	$inData = getRequestInfo();
 	
 	$searchResults = "";
@@ -16,6 +11,22 @@
 	} 
 	else
 	{
+		// Check if the user actually exists.
+		$stmt = $conn->prepare("select count(*) as count from Users where ID=?");
+		$stmt->bind_param("i", $inData["userID"]);
+		if (!$stmt->execute())
+            returnWithError($stmt->error);
+
+		$result = $stmt->get_result();
+		
+		if ($result->fetch_assoc()['count'] != 1) {
+			returnWithError("User not found.");
+			$stmt->close();
+			$conn->close();
+			return;
+		}
+
+		// Search for contacts.
 		$stmt = $conn->prepare("select ID, FirstName, LastName, Email, Phone from Contacts where 
 		(FirstName like ? or LastName like ?) and UserID=?");
 		$targetName = "%" . $inData["search"] . "%";
@@ -42,7 +53,7 @@
 		
 		if( $searchCount == 0 )
 		{
-			returnWithError( "No Records Found" );
+			returnWithError( "No records found." );
 		}
 		else
 		{

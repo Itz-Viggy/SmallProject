@@ -1,8 +1,4 @@
 <?php
-	// Enable detailed error reporting for debugging
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
 	$inData = getRequestInfo();
 	
 	$ID = $inData["ID"];
@@ -19,7 +15,22 @@
 	} 
 	else
 	{
-		//Delete the contact only if the user actually owns it.
+		// Check if the user/contact combination actually exists.
+		$stmt = $conn->prepare("select count(*) as count from Contacts where ID=? AND UserID=?");
+		$stmt->bind_param("ii", $ID, $userID);
+		if (!$stmt->execute())
+            returnWithError($stmt->error);
+
+		$result = $stmt->get_result();
+		
+		if ($result->fetch_assoc()['count'] != 1) {
+			returnWithError("User and contact pair not found.");
+			$stmt->close();
+			$conn->close();
+			return;
+		}
+
+		//Update the contact only if the user actually owns it.
         $stmt = $conn->prepare("update Contacts set FirstName=?, LastName=?, Email=?, Phone=?
 		where ID=? AND userID=?");
         $stmt->bind_param("ssssii", $firstName, $lastName, $email, $phone, $ID, $userID);

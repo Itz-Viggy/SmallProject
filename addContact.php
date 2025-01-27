@@ -1,8 +1,4 @@
 <?php
-	// Enable detailed error reporting for debugging
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
 	$inData = getRequestInfo();
 	
 	$firstName = $inData["firstName"];
@@ -18,6 +14,21 @@
 	} 
 	else
 	{
+		// Check if the user actually exists.
+		$stmt = $conn->prepare("select count(*) as count from Users where ID=?");
+		$stmt->bind_param("i", $userID);
+		if (!$stmt->execute())
+            returnWithError($stmt->error);
+
+		$result = $stmt->get_result();
+		
+		if ($result->fetch_assoc()['count'] != 1) {
+			returnWithError("User not found.");
+			$stmt->close();
+			$conn->close();
+			return;
+		}
+
         $stmt = $conn->prepare("INSERT into Contacts (FirstName, LastName, Email, Phone, UserID) VALUES(?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssi", $firstName, $lastName, $email, $phone, $userID);
 		if (!$stmt->execute()) {
