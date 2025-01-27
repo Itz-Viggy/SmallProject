@@ -1,5 +1,5 @@
 <?php
-// Enable detailed error reporting for debugging
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -11,6 +11,8 @@ $password = $inData["password"];
 $firstName = $inData["firstName"];
 $lastName = $inData["lastName"];
 
+$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
 // Database connection
 $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "Project1DB");
 if ($conn->connect_error) 
@@ -19,12 +21,12 @@ if ($conn->connect_error)
 } 
 else
 {
-    // Prepare and execute the SQL statement with first name and last name
+    
     $stmt = $conn->prepare("INSERT INTO Users (FirstName,LastName, Login, Password  ) VALUES(?, ?, ?, ?)");
     if (!$stmt) {
         returnWithError($conn->error);
     } else {
-        $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
+        $stmt->bind_param("ssss", $firstName, $lastName, $login, $hashedPassword);
         if (!$stmt->execute()) {
             returnWithError($stmt->error);
         } else {
