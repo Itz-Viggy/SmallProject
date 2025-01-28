@@ -1,5 +1,3 @@
-
-
 document.getElementById("loginForm").addEventListener("submit", function (event) {
     event.preventDefault(); 
   
@@ -24,7 +22,9 @@ document.getElementById("loginForm").addEventListener("submit", function (event)
       .then((data) => {
         if (data.error) {
        
-          document.getElementById("errorMessage").textContent = data.error;
+            errorMessage.textContent = data.error;
+            errorMessage.classList.remove("hidden");
+            errorMessage.classList.add("visible");
         } else {
 
 
@@ -33,7 +33,9 @@ document.getElementById("loginForm").addEventListener("submit", function (event)
       })
       .catch((error) => {
         console.error("Error:", error);
-        document.getElementById("errorMessage").textContent =
-          "An error occurred. Please try again.";
+        document.getElementById("errorMessage");
+        errorMessage.textContent = "An error occurred. Please try again.";
+        errorMessage.classList.remove("hidden");
+        errorMessage.classList.add("visible");
       });
   });

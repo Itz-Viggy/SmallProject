@@ -4,42 +4,6 @@
     box-sizing: border-box;
 }
 
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-}
-
-.header a {
-    text-decoration: none;
-}
-
-/* Buttons inside header */
-.header .btn {
-    background-color: #ffffff;
-    color: #2575fc;
-    border: none;
-    padding: 10px 20px;
-    margin-left: 10px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.header .btn:hover {
-    background-color: #2575fc;
-    color: #ffffff;
-    transform: scale(1.05);
-}
-
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -142,26 +106,4 @@ form input[type="submit"]:hover {
     background-color: #2575fc;
     color: #ffffff;
     transform: scale(1.05);
-}
-#errorMessage {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #ff6b6b; 
-    color: #fff; 
-    border-radius: 8px; 
-    text-align: center;
-    font-weight: bold;
-    font-size: 1rem;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 350px; 
-    transition: opacity 0.3s ease-in-out;
-}
-
-#errorMessage.hidden {
-    opacity: 0; 
-}
-
-#errorMessage.visible {
-    opacity: 1; 
 }
