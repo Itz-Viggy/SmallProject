@@ -21,20 +21,40 @@ if ($conn->connect_error)
 } 
 else
 {
-    
-    $stmt = $conn->prepare("INSERT INTO Users (FirstName,LastName, Login, Password  ) VALUES(?, ?, ?, ?)");
+    // Check if the login already exists
+    $checkStmt = $conn->prepare("SELECT Login FROM Users WHERE Login = ?");
+    $checkStmt->bind_param("s", $login);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $checkStmt->close();
+        $conn->close();
+        returnWithError("Login already exists");
+        exit();
+    }
+    $checkStmt->close();
+
+    // Insert the new user
+    $stmt = $conn->prepare("INSERT INTO Users (FirstName, LastName, Login, Password) VALUES(?, ?, ?, ?)");
     if (!$stmt) {
         returnWithError($conn->error);
-    } else {
+    } else
+    {
         $stmt->bind_param("ssss", $firstName, $lastName, $login, $hashedPassword);
         if (!$stmt->execute()) {
-            returnWithError($stmt->error);
+            if ($conn->errno == 1062) { 
+                returnWithError("Login already exists");
+            } else {
+                returnWithError($stmt->error);
+            }
         } else {
             $stmt->close();
             $conn->close();
-            returnWithError(""); // No error, success response
+            returnWithError(""); 
         }
     }
+    
 }
 
 // Function to get JSON input
