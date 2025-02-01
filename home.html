@@ -20,21 +20,27 @@
 <body>
     <div class="header">
         <p>Welcome, <span id="username"></span>!</p>
+        
+        <div class="right">
+        <a href="addContact.html"><button class="btn">Add Contact</button></a>
         <button type="button" id="logoutbutton" class="btn" onclick="logout()">Logout</button>
+        </div>
     </div>
 
     <div class="main-content" id="searchDiv">
         <br/>
         <h2>Search Contacts</h2>
+        
         <input type="text" id="searchText" placeholder='Contact Name (e.g. "Josh", "Jo")'/>
-        <button type="button" id="searchButton" class="buttons" onclick="searchContact();"> Search </button><br />
         <br/>
+        <button type="button" id="searchButton" class="buttons" onclick="searchContact();"> Search </button>
+        <br/>
+        <br/>
+        
         <span id="searchResult"></span>
-        <br/>	
-        <p id="contactList">
-	</p>
         <br/>
         <br/>
+        <div id="contactList" class = "contactList"></div>
     </div>
 </body>
 

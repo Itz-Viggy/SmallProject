@@ -8,7 +8,7 @@ let lastName = "";
 
 function saveCookie()
 {
-	let minutes = 20;
+	let minutes = 30;
 	let date = new Date();
 	date.setTime(date.getTime()+(minutes*60*1000));	
 	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
@@ -84,6 +84,7 @@ function searchContact()
                 if (jsonObject.error === "No records found.")
                 {
                     document.getElementById("searchResult").innerHTML = "No Contacts found";
+                    document.getElementById("contactList").innerHTML = contactList;
                 }
 		else
                 {
@@ -93,11 +94,24 @@ function searchContact()
                     for( let i=0; i<jsonObject.results.length; i++ )
                     {
 			foundContact = jsonObject.results[i];
-                        contactList += foundContact.firstName + " " + foundContact.lastName + ";  " + foundContact.email + ", " + foundContact.phone;
-                        if( i < jsonObject.results.length - 1 )
-                        {
-                            contactList += "<br />\r\n";
-                        }
+                        
+                        let toAdd = '<div class="contactBox" id="' + foundContact.ID.toString() +'">';
+                        //left flex box, for contact
+                          toAdd += '<div class = "contactInfo">';
+                            toAdd += '<p class = "firstname">' + foundContact.firstName + '</p>';
+                            toAdd += '<p class = "lastname">' + foundContact.lastName + '</p>';
+                            toAdd += '<p class = "email">' + foundContact.email + '</p>';
+                            toAdd += '<p class = "phone">' + foundContact.phone +'</p>';
+                            
+                          toAdd += '</div>';
+                        //right flex box, for buttons
+                          toAdd += '<div>';
+                            toAdd += '<button type="button" class="delete-btn" onclick="deleteContact(' + foundContact.ID + ')">Delete</button>';
+                            toAdd += '<button type="button" class="edit-btn" onclick="editContact(' + foundContact.ID + ')">Edit</button>';
+                          toAdd += '</div>';
+                        toAdd += '</div>';
+                        
+                        contactList += toAdd;
                     }
 
                     document.getElementById("contactList").innerHTML = contactList;
@@ -110,5 +124,86 @@ function searchContact()
     {
         document.getElementById("searchResult").innerHTML = err.message;
     }
+
+}
+
+function addContact() {
+  let tmpFirstName = document.getElementById("firstName").value;
+  let tmpLastName = document.getElementById("lastName").value;
+  let email = document.getElementById("email").value;
+  let phone = document.getElementById("phone").value;
+  
+  let tmp = {firstName:tmpFirstName,
+              lastName:tmpLastName,
+                 email:email,
+                 phone:phone,
+                userID:userId};
+                 
+  let jsonPayload = JSON.stringify(tmp);
+  
+  fetch("./LAMPAPI/addContact.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:jsonPayload,
+    })
+  
+  	.then((response) => response.json())
+    .then((tmp) => {
+        if (tmp.error != "") {
+            addResult.textContent = tmp.error;
+            addResult.classList.remove("hidden");
+            addResult.classList.remove("success");
+            addResult.classList.add("error");
+        } else {
+
+          addResult.textContent = "New Contact Added";
+          addResult.classList.remove("hidden");
+          addResult.classList.remove("error");
+          addResult.classList.add("success");
+          document.getElementById("addForm").reset();
+        }
+      })
+      .catch((error) => {
+        addResult.textContent = "An error occurred. Please try again.";
+        addResult.classList.remove("hidden");
+        addResult.classList.remove("success");
+        addResult.classList.add("error");
+    });
+  
+}
+
+function deleteContact(ID) {
+  if (!confirm("Are you sure you want to delete this contact?"))
+    return;
+    
+  let tmp = {ID:ID, userID:userId}
+  
+  let jsonPayload = JSON.stringify(tmp);
+  
+  fetch("./LAMPAPI/deleteContact.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:jsonPayload,
+    })
+  
+  	.then((response) => response.json())
+    .then((tmp) => {
+        if (tmp.error != "") {
+            alert("An error occurred. Please try again.");
+        } else {
+
+          document.getElementById(ID.toString()).remove();
+        }
+      })
+      .catch((error) => {
+        alert("An error occurred. Please try again.");
+    });
+}
+
+function editContact(ID) {
 
 }

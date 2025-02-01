@@ -5,6 +5,8 @@
     box-sizing: border-box;
 }
 
+html,body { height: 100% }
+
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -12,12 +14,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: 100vh;
+    
+    background-repeat:no-repeat;
+    background-attachment:fixed;
 }
 
 .header {
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -26,7 +30,7 @@ body {
     padding: 20px;
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 100; 
+    z-index: 100;
 }
 
 .header a {
@@ -52,15 +56,21 @@ body {
 }
 
 .header p {
+    font-weight: bold;
     font-size: 1.8rem;
     color: #e0e0e0;
 }
 
 .main-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
     text-align: center;
-    margin-top: 50px;
-    background-color: #2575fc;
-    width: 50%;
+    margin-top: 100px;
+    width: 70%;
+    
 }
 
 .main-content h1 {
@@ -75,4 +85,74 @@ body {
 .main-content p {
     font-size: 1.2rem;
     color: #e0e0e0;
+}
+
+.main-content .firstname,
+.main-content .lastname,
+.main-content .email,
+.main-content .phone {
+    display: inline;
+    margin-left: 5px;
+
+}
+
+.contactBox .contactInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.contactList .contactBox {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem;
+}
+
+.contactList button {
+    margin-left:10px;
+}
+
+#searchDiv input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-align: center;
+}
+
+#searchDiv input[type="text"]::placeholder {
+    color: white;
+    opacity: 0.75;
+    text-align: center;
+}
+
+#searchDiv button {
+    background-color: #ffffff;
+    color: #2575fc;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#searchDiv button:hover {
+    background-color: #2575fc;
+    color: #ffffff;
+    transform: scale(1.05);
 }
