@@ -205,5 +205,93 @@ function deleteContact(ID) {
 }
 
 function editContact(ID) {
+    let oldContact = document.getElementById(ID.toString());
+    let backup = oldContact.innerHTML;
+    let oldFirst = oldContact.childNodes[0].childNodes[0].innerText;
+    let oldLast = oldContact.childNodes[0].childNodes[1].innerText;
+    let oldEmail = oldContact.childNodes[0].childNodes[2].innerText;
+    let oldPhone = oldContact.childNodes[0].childNodes[3].innerText;
+
+
+    let tempReplace = ""; 
+          //left flex box, for contact
+          tempReplace += '<div class = "contactInfo" id="editForm">';
+            tempReplace += '<input type="text" class="editInput" id="editFirst" placeholder="First Name" size="15" value="' + oldFirst + '"/>';
+            tempReplace += '<input type="text" class="editInput" id="editLast"  placeholder="Last Name" size="15" value="' + oldLast + '"/>';
+            tempReplace += '<input type="text" class="editInput" id="editEmail" placeholder="E-mail" size="25" value="' + oldEmail + '"/>';
+            tempReplace += '<input type="text" class="editInput" id="editPhone" placeholder="Phone Number" size="14" value="' + oldPhone + '"/>';
+                            
+          tempReplace += '</div>';
+          //right flex box, for buttons
+          tempReplace += '<div>';
+            tempReplace += '<button type="button" class="cancel-btn" onclick="restoreFromEdit(&quot;' + ID.toString() + '&quot;, &quot;' + oldFirst + '&quot;, &quot;' + oldLast + '&quot;, &quot;' + oldEmail + '&quot;, &quot;' + oldPhone + '&quot;)">Cancel</button>';
+            tempReplace += '<button type="button" class="confirm-btn" onclick="updateContact(' + ID.toString() + ')">Confirm</button>';
+          tempReplace += '</div>';
+
+    document.getElementById(ID.toString()).innerHTML = tempReplace;
+}
+
+function restoreFromEdit(IDstr, oldF, oldL, oldE, oldP){
+    //left flex box, for contact
+    let toAdd = '<div class = "contactInfo">';
+      toAdd += '<p class = "firstname">' + oldF + '</p>';
+      toAdd += '<p class = "lastname">' + oldL + '</p>';
+      toAdd += '<p class = "email">' + oldE + '</p>';
+      toAdd += '<p class = "phone">' + oldP +'</p>';
+                            
+    toAdd += '</div>';
+    //right flex box, for buttons
+    toAdd += '<div>';
+      toAdd += '<button type="button" class="delete-btn" onclick="deleteContact(' + IDstr + ')">Delete</button>';
+      toAdd += '<button type="button" class="edit-btn" onclick="editContact(' + IDstr + ')">Edit</button>';
+    toAdd += '</div>';
+
+    document.getElementById(IDstr).innerHTML = toAdd;
+}
+
+function updateContact(Id){
+    let newF = document.getElementById("editFirst").value;
+    let newL = document.getElementById("editLast").value;
+    let newE = document.getElementById("editEmail").value;
+    let newP = document.getElementById("editPhone").value;
+
+    let tmp = {ID:Id, userID:userId, firstName:newF, lastName:newL, email:newE, phone:newP};
+  
+    let jsonPayload = JSON.stringify(tmp);
+    console.log(jsonPayload);
+    fetch("./LAMPAPI/modifyContact.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:jsonPayload,
+    })
+  
+  	.then((response) => response.json())
+    .then((tmp) => {
+        if (tmp.error != "") {
+            alert(tmp.error);
+        } else {
+          //left flex box, for contact
+          let toAdd = '<div class = "contactInfo">';
+            toAdd += '<p class = "firstname">' + newF + '</p>';
+            toAdd += '<p class = "lastname">' + newL + '</p>';
+            toAdd += '<p class = "email">' + newE + '</p>';
+            toAdd += '<p class = "phone">' + newP +'</p>';
+                            
+          toAdd += '</div>';
+          //right flex box, for buttons
+          toAdd += '<div>';
+            toAdd += '<button type="button" class="delete-btn" onclick="deleteContact(' + Id.toString() + ')">Delete</button>';
+            toAdd += '<button type="button" class="edit-btn" onclick="editContact(' + Id.toString() + ')">Edit</button>';
+          toAdd += '</div>';
+
+          document.getElementById(Id.toString()).innerHTML = toAdd;
+        }
+      })
+      .catch((error) => {
+        alert("An error occurred. Please try again.");
+    });
+
 
 }
