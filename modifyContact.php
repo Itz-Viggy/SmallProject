@@ -20,6 +20,18 @@
 		return;
 	}
 
+	// Check if any fields are too large.
+	if (strlen($firstName) > 50) {
+		returnWithError("First Name field entry was longer than 50 characters.");
+		return;
+	} else if (strlen($lastName) > 50) {
+		returnWithError("Last Name field entry was longer than 50 characters.");
+		return;
+	} else if (strlen($email) > 50) {
+		returnWithError("Email field entry was longer than 50 characters.");
+		return;
+	}
+
 	// Check if the email is in the proper format.
 	if (preg_match($emailPattern, $email) != 1) {
 		returnWithError("The email was not in the correct format.");
